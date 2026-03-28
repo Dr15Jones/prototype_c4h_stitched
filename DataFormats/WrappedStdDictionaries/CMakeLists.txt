@@ -2,7 +2,16 @@
 # This package contains ROOT dictionary definitions
 file(GLOB SOURCES src/*.cc)
 
-if(SOURCES)
+if(ROOT_FOUND)
+    # Generate dictionary
+    set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> )
+    root_generate_dictionary(DataFormatsWrappedStdDictionaries_dict
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
+        LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
+        NOINSTALL
+        OPTIONS --reflex
+    )
+    list(APPEND SOURCES DataFormatsWrappedStdDictionaries_dict.cxx)
     add_library(DataFormatsWrappedStdDictionaries SHARED ${SOURCES})
 
     target_include_directories(DataFormatsWrappedStdDictionaries
@@ -15,6 +24,7 @@ if(SOURCES)
     target_link_libraries(DataFormatsWrappedStdDictionaries
         PUBLIC
             DataFormatsCommon
+            ROOT::Core
     )
 
     set_target_properties(DataFormatsWrappedStdDictionaries PROPERTIES

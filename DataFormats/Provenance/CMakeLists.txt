@@ -1,6 +1,19 @@
 # DataFormats/Provenance library
 file(GLOB SOURCES src/*.cc)
 
+# Generate ROOT dictionary if classes_def.xml exists
+if(ROOT_FOUND AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h)
+    set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
+    root_generate_dictionary(DataFormatsProvenance_dict
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
+        LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
+        NOINSTALL
+        NO_CXXMODULE
+        OPTIONS --reflex
+    )
+    list(APPEND SOURCES DataFormatsProvenance_dict.cxx)
+endif()
+
 add_library(DataFormatsProvenance SHARED ${SOURCES})
 
 target_include_directories(DataFormatsProvenance
@@ -16,11 +29,9 @@ target_link_libraries(DataFormatsProvenance
         FWCoreReflection
         Boost::boost
         TBB::tbb
+        ROOT::Core
+        ROOT::RIO
 )
-
-if(ROOT_FOUND)
-    target_link_libraries(DataFormatsProvenance PUBLIC ROOT::Core ROOT::RIO)
-endif()
 
 set_target_properties(DataFormatsProvenance PROPERTIES
     VERSION 1.0.0

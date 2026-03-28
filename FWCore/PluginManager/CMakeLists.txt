@@ -15,11 +15,8 @@ target_link_libraries(FWCorePluginManager
         FWCoreUtilities
         Boost::filesystem
         ${CMAKE_DL_LIBS}
+        ROOT::Core
 )
-
-if(ROOT_FOUND)
-    target_link_libraries(FWCorePluginManager PUBLIC ROOT::Core)
-endif()
 
 set_target_properties(FWCorePluginManager PROPERTIES
     VERSION 1.0.0

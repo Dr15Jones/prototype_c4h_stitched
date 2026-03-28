@@ -65,9 +65,7 @@ endif()
 find_package(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree
     PATHS ${ROOT_DIR}
     NO_DEFAULT_PATH)
-if(ROOT_FOUND)
-    message(STATUS "Found ROOT: ${ROOT_VERSION} at ${ROOT_DIR}")
-endif()
+message(STATUS "Found ROOT: ${ROOT_VERSION} at ${ROOT_DIR}")
 
 # Find Python3
 set(Python3_EXECUTABLE ${PYTHON3_ROOT}/bin/python3)

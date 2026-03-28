@@ -27,11 +27,8 @@ target_link_libraries(FWCoreFramework
         Boost::boost
         Boost::program_options
         TBB::tbb
+        ROOT::Core
 )
-
-if(ROOT_FOUND)
-    target_link_libraries(FWCoreFramework PUBLIC ROOT::Core ROOT::RIO ROOT::Net ROOT::Tree)
-endif()
 
 set_target_properties(FWCoreFramework PROPERTIES
     VERSION 1.0.0
@@ -59,11 +56,8 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/cmsRun.cpp)
             FWCoreUtilities
             FWCoreConcurrency
             TBB::tbb
+            ROOT::Core
     )
-    
-    if(ROOT_FOUND)
-        target_link_libraries(cmsRun PRIVATE ROOT::Core)
-    endif()
     
     set_target_properties(cmsRun PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin

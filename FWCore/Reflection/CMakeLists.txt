@@ -13,11 +13,8 @@ target_include_directories(FWCoreReflection
 target_link_libraries(FWCoreReflection
     PUBLIC
         FWCoreUtilities
+        ROOT::Core
 )
-
-if(ROOT_FOUND)
-    target_link_libraries(FWCoreReflection PUBLIC ROOT::Core)
-endif()
 
 set_target_properties(FWCoreReflection PROPERTIES
     VERSION 1.0.0
