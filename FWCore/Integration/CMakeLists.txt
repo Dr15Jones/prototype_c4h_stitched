@@ -35,8 +35,6 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/plugins)
                 FWCoreIntegration
                 FWCoreFramework
         )
-        set_target_properties(FWCoreIntegrationPlugins PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/plugins
-        )
+        set_target_properties(FWCoreIntegrationPlugins PROPERTIES PREFIX "edmplugin")
     endif()
 endif()

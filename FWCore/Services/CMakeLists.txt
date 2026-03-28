@@ -39,8 +39,6 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/plugins)
                 FWCoreServices
                 FWCoreFramework
         )
-        set_target_properties(FWCoreServicesPlugins PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/plugins
-        )
+        set_target_properties(FWCoreServicesPlugins PROPERTIES PREFIX "edmplugin")
     endif()
 endif()
