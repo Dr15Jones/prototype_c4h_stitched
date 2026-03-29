@@ -22,3 +22,6 @@ set_target_properties(FWCorePluginManager PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )
+
+# Add bin directory for executables
+add_subdirectory(bin)
