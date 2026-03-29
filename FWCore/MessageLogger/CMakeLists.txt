@@ -12,6 +12,7 @@ target_include_directories(FWCoreMessageLogger
 
 target_link_libraries(FWCoreMessageLogger
     PUBLIC
+        DataFormatsProvenance
         FWCoreUtilities
         Boost::boost
         Threads::Threads

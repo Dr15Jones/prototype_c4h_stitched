@@ -12,6 +12,7 @@ target_include_directories(FWCoreModulesPlugins
 
 target_link_libraries(FWCoreModulesPlugins
     PUBLIC
+        FWCoreSources
         FWCoreFramework
         FWCoreParameterSet
 )

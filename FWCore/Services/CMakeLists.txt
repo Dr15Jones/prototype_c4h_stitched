@@ -17,11 +17,15 @@ target_link_libraries(FWCoreServices
         FWCoreMessageLogger
         FWCoreParameterSet
         FWCoreServiceRegistry
+        DataFormatsProvenance
         FWCoreUtilities
         Boost::boost
         tinyxml2::tinyxml2
         CLHEP::CLHEP
         cpu_features::cpu_features
+        ROOT::Tree
+        ROOT::Hist
+        atomic
 )
 
 set_target_properties(FWCoreServices PROPERTIES

@@ -25,6 +25,8 @@ target_include_directories(FWCoreCommon
 target_link_libraries(FWCoreCommon
     PUBLIC
         DataFormatsCommon
+        DataFormatsProvenance
+        FWCoreParameterSet
         FWCoreUtilities
         ROOT::Core
 )

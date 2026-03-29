@@ -33,7 +33,13 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/plugins)
         target_link_libraries(FWCoreIntegrationPlugins
             PRIVATE
                 FWCoreIntegration
+                FWCoreSources
                 FWCoreFramework
+                DataFormatsTestObjects
+                DataFormatsProvenance
+                FWCoreSharedMemory
+                ROOT::Hist
+                ROOT::Core
         )
         set_target_properties(FWCoreIntegrationPlugins PROPERTIES PREFIX "edmplugin")
     endif()

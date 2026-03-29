@@ -13,6 +13,11 @@ target_include_directories(FWCoreTestModulesPlugins
 target_link_libraries(FWCoreTestModulesPlugins
     PUBLIC
         FWCoreFramework
+        DataFormatsProvenance
+        FWCoreAbstractServices
+        FWCorePluginManager
+        FWCoreSources
         FWCoreParameterSet
+        FWCoreUtilities
 )
 set_target_properties(FWCoreTestModulesPlugins PROPERTIES PREFIX "edmplugin")

@@ -210,6 +210,7 @@ endif()
 
 # Add compile options
 add_compile_options(-Wall -Werror=return-type -Wno-attributes -DPROJECT_VERSION="1_0_0" -DCMS_MICRO_ARCH="UNKNOWN")
+add_link_options(LINKER:-z,defs)
 
 # Add subdirectories
 add_subdirectory(DataFormats)

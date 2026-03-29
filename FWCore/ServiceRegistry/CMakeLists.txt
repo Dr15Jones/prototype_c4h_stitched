@@ -12,8 +12,12 @@ target_include_directories(FWCoreServiceRegistry
 
 target_link_libraries(FWCoreServiceRegistry
     PUBLIC
-        FWCoreUtilities
+        FWCoreAbstractServices
+        DataFormatsProvenance
+        FWCoreParameterSet
+        FWCoreMessageLogger
         FWCorePluginManager
+        FWCoreUtilities
         Boost::boost
         TBB::tbb
 )

@@ -12,8 +12,10 @@ target_include_directories(FWCoreParameterSet
 
 target_link_libraries(FWCoreParameterSet
     PUBLIC
-        FWCoreUtilities
+        FWCorePluginManager
         FWCoreMessageLogger
+        DataFormatsProvenance
+        FWCoreUtilities
         Boost::boost
         TBB::tbb
         Python3::Python

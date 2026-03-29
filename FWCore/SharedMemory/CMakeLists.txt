@@ -15,6 +15,7 @@ target_link_libraries(FWCoreSharedMemory
         FWCoreFramework
         FWCoreUtilities
         Boost::boost
+        rt
 )
 
 set_target_properties(FWCoreSharedMemory PROPERTIES
