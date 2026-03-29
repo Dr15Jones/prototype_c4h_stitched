@@ -217,3 +217,28 @@ add_subdirectory(DataFormats)
 add_subdirectory(FWCore)
 add_subdirectory(SimDataFormats)
 add_subdirectory(Utilities)
+
+# Custom target to run edmPluginRefresh on all plugin libraries after build
+add_custom_target(RefreshPluginCache ALL
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh -p ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+    COMMENT "Refreshing plugin cache for edmplugin libraries"
+    VERBATIM
+)
+
+# Make sure RefreshPluginCache runs after edmPluginRefresh is built and all plugins are built
+add_dependencies(RefreshPluginCache edmPluginRefresh)
+if(TARGET FWCoreModulesPlugins)
+    add_dependencies(RefreshPluginCache FWCoreModulesPlugins)
+endif()
+if(TARGET FWCoreIntegrationPlugins)
+    add_dependencies(RefreshPluginCache FWCoreIntegrationPlugins)
+endif()
+if(TARGET FWCoreMessageServicePlugins)
+    add_dependencies(RefreshPluginCache FWCoreMessageServicePlugins)
+endif()
+if(TARGET FWCoreServicesPlugins)
+    add_dependencies(RefreshPluginCache FWCoreServicesPlugins)
+endif()
+if(TARGET FWCoreTestModulesPlugins)
+    add_dependencies(RefreshPluginCache FWCoreTestModulesPlugins)
+endif()
