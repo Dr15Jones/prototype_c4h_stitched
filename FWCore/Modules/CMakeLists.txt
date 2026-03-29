@@ -17,3 +17,16 @@ target_link_libraries(FWCoreModulesPlugins
         FWCoreParameterSet
 )
 set_target_properties(FWCoreModulesPlugins PROPERTIES PREFIX "edmplugin")
+
+# Copy and install Python files
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/python)
+    file(RELATIVE_PATH PKG_PYTHON_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/python/
+         DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
+         PATTERN "__pycache__" EXCLUDE
+         PATTERN "*.pyc" EXCLUDE)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python/
+            DESTINATION python/${PKG_PYTHON_PATH}
+            PATTERN "__pycache__" EXCLUDE
+            PATTERN "*.pyc" EXCLUDE)
+endif()
