@@ -1,21 +1,16 @@
 # DataFormats/TestObjects library
 file(GLOB SOURCES src/*.cc)
 
-# Generate ROOT dictionary if classes_def.xml exists
-if(ROOT_FOUND AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h)
-    get_target_property(MY_INCLUDES DataFormatsCommon INCLUDE_DIRECTORIES)
-    get_target_property(TBB_INCLUDES TBB::tbb INTERFACE_INCLUDE_DIRECTORIES)
-    set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> ${MY_INCLUDES} ${TBB_INCLUDES})
-    root_generate_dictionary(DataFormatsTestObjects_dict
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
-        LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
-        NOINSTALL
-        OPTIONS --reflex
-    )
-    list(APPEND SOURCES DataFormatsTestObjects_dict.cxx)
-endif()
-
 add_library(DataFormatsTestObjects SHARED ${SOURCES})
+
+# Generate ROOT dictionary if classes_def.xml exists
+root_generate_dictionary(DataFormatsTestObjects_dict
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
+    LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
+    MODULE DataFormatsTestObjects
+    NOINSTALL
+    OPTIONS --reflex
+)
 
 target_include_directories(DataFormatsTestObjects
     PUBLIC

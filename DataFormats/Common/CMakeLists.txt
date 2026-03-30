@@ -1,8 +1,17 @@
 # DataFormats/Common library
 file(GLOB SOURCES src/*.cc)
 
-
 add_library(DataFormatsCommon SHARED ${SOURCES})
+
+# Generate ROOT dictionary if classes_def.xml exists
+# Generate dictionary
+root_generate_dictionary(DataFormatsCommon_dict
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
+    LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
+    MODULE DataFormatsCommon
+    NOINSTALL
+    OPTIONS --reflex
+)
 
 target_include_directories(DataFormatsCommon
     PUBLIC
@@ -10,20 +19,6 @@ target_include_directories(DataFormatsCommon
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
 )
-
-# Generate ROOT dictionary if classes_def.xml exists
-if(ROOT_FOUND AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h)
-    # Generate dictionary
-    get_target_property(MY_INCLUDES DataFormatsCommon INCLUDE_DIRECTORIES)
-    set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> ${MY_INCLUDES})
-    root_generate_dictionary(DataFormatsCommon_dict
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
-        LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
-        NOINSTALL
-        OPTIONS --reflex
-    )
-    list(APPEND SOURCES DataFormatsCommon_dict.cxx)
-endif()
 
 target_link_libraries(DataFormatsCommon
     PUBLIC

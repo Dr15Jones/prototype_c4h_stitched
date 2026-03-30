@@ -38,3 +38,6 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/python)
             PATTERN "__pycache__" EXCLUDE
             PATTERN "*.pyc" EXCLUDE)
 endif()
+
+# Add bin directory for executables
+add_subdirectory(bin)
