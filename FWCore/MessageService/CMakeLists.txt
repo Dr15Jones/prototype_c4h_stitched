@@ -31,10 +31,16 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/python)
          DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
          PATTERN "__pycache__" EXCLUDE
          PATTERN "*.pyc" EXCLUDE)
+    # Also copy the modules.py template from FWCore/ParameterSet/templates
+    file(COPY ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
+         DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python/
             DESTINATION python/${PKG_PYTHON_PATH}
             PATTERN "__pycache__" EXCLUDE
             PATTERN "*.pyc" EXCLUDE)
+    # Install the modules.py template as well
+    install(FILES ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
+            DESTINATION python/${PKG_PYTHON_PATH})
 endif()
 
 # Build plugins if they exist
