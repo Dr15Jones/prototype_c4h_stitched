@@ -220,7 +220,12 @@ add_subdirectory(Utilities)
 
 # Custom target to run edmPluginRefresh on all plugin libraries after build
 add_custom_target(RefreshPluginCache ALL
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh -p ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh
+        $<$<TARGET_EXISTS:FWCoreModulesPlugins>:$<TARGET_FILE:FWCoreModulesPlugins>>
+        $<$<TARGET_EXISTS:FWCoreIntegrationPlugins>:$<TARGET_FILE:FWCoreIntegrationPlugins>>
+        $<$<TARGET_EXISTS:FWCoreMessageServicePlugins>:$<TARGET_FILE:FWCoreMessageServicePlugins>>
+        $<$<TARGET_EXISTS:FWCoreServicesPlugins>:$<TARGET_FILE:FWCoreServicesPlugins>>
+        $<$<TARGET_EXISTS:FWCoreTestModulesPlugins>:$<TARGET_FILE:FWCoreTestModulesPlugins>>
     COMMENT "Refreshing plugin cache for edmplugin libraries"
     VERBATIM
 )
