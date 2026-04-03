@@ -25,9 +25,10 @@ set_target_properties(FWCoreIntegration PROPERTIES
     SOVERSION 1
 )
 
+
+file(RELATIVE_PATH PKG_PYTHON_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 # Copy and install Python files
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/python)
-    file(RELATIVE_PATH PKG_PYTHON_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/python/
          DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
          PATTERN "__pycache__" EXCLUDE
@@ -62,4 +63,10 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/plugins)
         )
         set_target_properties(FWCoreIntegrationPlugins PROPERTIES PREFIX "edmplugin")
     endif()
+    # Run edmWriteConfigs to generate Python configuration for this plugin library
+    add_custom_command(TARGET FWCoreIntegrationPlugins POST_BUILD
+      COMMAND ${CMAKE_BINARY_DIR}/bin/edmWriteConfigs -p $<TARGET_FILE:FWCoreIntegrationPlugins>
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
+      COMMENT "Generating Python configs for FWCoreIntegrationPlugins"
+    )
 endif()
