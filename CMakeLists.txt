@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_COMPILER "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/gcc/13.4.0-6908cfdf803923e783448096ca4f0923/bin/g++")
 set(CMAKE_C_COMPILER "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/gcc/13.4.0-6908cfdf803923e783448096ca4f0923/bin/gcc")
 
-project(CMSSW CXX)
+project(CMSSW VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++ standard (C++20 required for concepts)
 set(CMAKE_CXX_STANDARD 20)
@@ -247,3 +247,143 @@ endif()
 if(TARGET FWCoreTestModulesPlugins)
     add_dependencies(RefreshPluginCache FWCoreTestModulesPlugins)
 endif()
+
+# ============================================================================
+# Installation and package configuration
+# ============================================================================
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+# Set installation directories
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
+set(BIN_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
+set(CONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/CMSSW)
+
+# Install all targets with EXPORT
+# Note: This assumes all libraries are built as SHARED libraries
+# and should be exported together
+
+# Get all library targets that were created
+set(CMSSW_EXPORT_TARGETS
+    # FWCore libraries
+    FWCoreUtilities
+    FWCorePluginManager
+    FWCoreReflection
+    FWCoreVersion
+    FWCoreParameterSet
+    FWCoreParameterSetReader
+    FWCorePythonParameterSet
+    FWCoreServiceRegistry
+    FWCoreMessageLogger
+    FWCoreMessageService
+    FWCoreAbstractServices
+    FWCoreConcurrency
+    FWCoreSharedMemory
+    FWCoreCommon
+    FWCoreFramework
+    FWCoreSources
+    FWCorePythonFramework
+    FWCoreTestProcessor
+    FWCoreServices
+    FWCoreIntegration
+    # DataFormats libraries
+    DataFormatsCommon
+    DataFormatsProvenance
+    DataFormatsTestObjects
+    DataFormatsStdDictionaries_map
+    DataFormatsStdDictionaries_others
+    DataFormatsStdDictionaries_pair
+    DataFormatsStdDictionaries_vector
+    DataFormatsWrappedStdDictionaries
+    # SimDataFormats libraries
+    SimDataFormatsRandomEngine
+)
+
+# Install libraries and executables
+foreach(target ${CMSSW_EXPORT_TARGETS})
+    if(TARGET ${target})
+        install(TARGETS ${target}
+            EXPORT CMSSSWTargets
+            LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+            ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+            RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+            INCLUDES DESTINATION ${INCLUDE_INSTALL_DIR}
+        )
+    endif()
+endforeach()
+
+# Install executables
+set(CMSSW_EXECUTABLES
+    cmsRun
+    edmPluginDump
+    edmPluginHelp
+    edmPluginRefresh
+    edmWriteConfigs
+)
+
+foreach(exec ${CMSSW_EXECUTABLES})
+    if(TARGET ${exec})
+        install(TARGETS ${exec}
+            EXPORT CMSSSWTargets
+            RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+        )
+    endif()
+endforeach()
+
+# Install header files
+# Install all interface directories maintaining the package structure
+install(DIRECTORY DataFormats/
+    DESTINATION ${INCLUDE_INSTALL_DIR}/DataFormats
+    FILES_MATCHING PATTERN "interface/*.h"
+)
+
+install(DIRECTORY FWCore/
+    DESTINATION ${INCLUDE_INSTALL_DIR}/FWCore
+    FILES_MATCHING PATTERN "interface/*.h"
+)
+
+install(DIRECTORY SimDataFormats/
+    DESTINATION ${INCLUDE_INSTALL_DIR}/SimDataFormats
+    FILES_MATCHING PATTERN "interface/*.h"
+)
+
+install(DIRECTORY Utilities/
+    DESTINATION ${INCLUDE_INSTALL_DIR}/Utilities
+    FILES_MATCHING PATTERN "interface/*.h"
+)
+
+# Export targets file
+install(EXPORT CMSSSWTargets
+    FILE CMSSSWTargets.cmake
+    NAMESPACE CMSSW::
+    DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
+# Configure and install package config files
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/CMSSSWConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/CMSSSWConfig.cmake
+    INSTALL_DESTINATION ${CONFIG_INSTALL_DIR}
+    PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/CMSSSWConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/CMSSSWConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/CMSSSWConfigVersion.cmake
+    DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
+# Print installation information
+message(STATUS "CMSSW will be installed to: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "  Libraries: ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
+message(STATUS "  Headers: ${CMAKE_INSTALL_PREFIX}/${INCLUDE_INSTALL_DIR}")
+message(STATUS "  CMake config: ${CMAKE_INSTALL_PREFIX}/${CONFIG_INSTALL_DIR}")
+

@@ -1,0 +1,63 @@
+@PACKAGE_INIT@
+
+# CMSSWConfig.cmake
+# Configuration file for the CMSSW package
+
+# Compute paths
+get_filename_component(CMSSW_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# Include the targets file
+include("${CMSSW_CMAKE_DIR}/CMSSSWTargets.cmake")
+
+# Set variables for compatibility
+set(CMSSW_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(CMSSW_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+
+# Provide a list of available libraries/components
+set(CMSSW_LIBRARIES
+    FWCoreUtilities
+    FWCorePluginManager
+    FWCoreReflection
+    FWCoreVersion
+    FWCoreParameterSet
+    FWCoreParameterSetReader
+    FWCorePythonParameterSet
+    FWCoreServiceRegistry
+    FWCoreMessageLogger
+    FWCoreMessageService
+    FWCoreAbstractServices
+    FWCoreConcurrency
+    FWCoreSharedMemory
+    FWCoreCommon
+    FWCoreFramework
+    FWCoreSources
+    FWCorePythonFramework
+    FWCoreTestProcessor
+    FWCoreServices
+    FWCoreIntegration
+    DataFormatsCommon
+    DataFormatsProvenance
+    DataFormatsTestObjects
+    SimDataFormatsRandomEngine
+)
+
+# Check if requested components are available
+if(CMSSW_FIND_COMPONENTS)
+    foreach(comp ${CMSSW_FIND_COMPONENTS})
+        if(NOT TARGET ${comp})
+            if(CMSSW_FIND_REQUIRED_${comp})
+                message(FATAL_ERROR "CMSSW component ${comp} not found")
+            else()
+                message(WARNING "CMSSW component ${comp} not found")
+            endif()
+            set(CMSSW_${comp}_FOUND FALSE)
+        else()
+            set(CMSSW_${comp}_FOUND TRUE)
+        endif()
+    endforeach()
+endif()
+
+check_required_components(CMSSW)
+
+# Provide helpful information
+message(STATUS "Found CMSSW: ${CMSSW_CMAKE_DIR}")
