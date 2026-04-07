@@ -32,7 +32,7 @@ setenv LD_LIBRARY_PATH "${MD5_ROOT}/lib:${LD_LIBRARY_PATH}"
 
 # TinyXML2
 setenv TINYXML2_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/tinyxml2/6.2.0-67924ead96ecb4e69aad321b767979a5"
-setenv LD_LIBRARY_PATH "${TINYXML2_ROOT}/lib:${LD_LIBRARY_PATH}"
+setenv LD_LIBRARY_PATH "${TINYXML2_ROOT}/lib64:${LD_LIBRARY_PATH}"
 
 # CLHEP
 setenv CLHEP_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/clhep/2.4.7.2-9d5b7c3a55c3af00652fa823dcdd8319"
