@@ -219,8 +219,16 @@ add_subdirectory(SimDataFormats)
 add_subdirectory(Utilities)
 
 # Custom target to run edmPluginRefresh on all plugin libraries after build
-add_custom_target(RefreshPluginCache ALL
+add_custom_target(
+    OUTPUT "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/.edmplugincache"
     COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh
+        $<$<TARGET_EXISTS:FWCoreModulesPlugins>:$<TARGET_FILE:FWCoreModulesPlugins>>
+        $<$<TARGET_EXISTS:FWCoreIntegrationPlugins>:$<TARGET_FILE:FWCoreIntegrationPlugins>>
+        $<$<TARGET_EXISTS:FWCoreMessageServicePlugins>:$<TARGET_FILE:FWCoreMessageServicePlugins>>
+        $<$<TARGET_EXISTS:FWCoreServicesPlugins>:$<TARGET_FILE:FWCoreServicesPlugins>>
+        $<$<TARGET_EXISTS:FWCoreTestModulesPlugins>:$<TARGET_FILE:FWCoreTestModulesPlugins>>
+    DEPENDS
+        edmPluginRefresh
         $<$<TARGET_EXISTS:FWCoreModulesPlugins>:$<TARGET_FILE:FWCoreModulesPlugins>>
         $<$<TARGET_EXISTS:FWCoreIntegrationPlugins>:$<TARGET_FILE:FWCoreIntegrationPlugins>>
         $<$<TARGET_EXISTS:FWCoreMessageServicePlugins>:$<TARGET_FILE:FWCoreMessageServicePlugins>>
@@ -230,23 +238,26 @@ add_custom_target(RefreshPluginCache ALL
     VERBATIM
 )
 
+install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/.edmplugincache"
+        TYPE LIB) # Automatically uses CMAKE_INSTALL_LIBDIR
+
 # Make sure RefreshPluginCache runs after edmPluginRefresh is built and all plugins are built
-add_dependencies(RefreshPluginCache edmPluginRefresh)
-if(TARGET FWCoreModulesPlugins)
-    add_dependencies(RefreshPluginCache FWCoreModulesPlugins)
-endif()
-if(TARGET FWCoreIntegrationPlugins)
-    add_dependencies(RefreshPluginCache FWCoreIntegrationPlugins)
-endif()
-if(TARGET FWCoreMessageServicePlugins)
-    add_dependencies(RefreshPluginCache FWCoreMessageServicePlugins)
-endif()
-if(TARGET FWCoreServicesPlugins)
-    add_dependencies(RefreshPluginCache FWCoreServicesPlugins)
-endif()
-if(TARGET FWCoreTestModulesPlugins)
-    add_dependencies(RefreshPluginCache FWCoreTestModulesPlugins)
-endif()
+#add_dependencies(RefreshPluginCache edmPluginRefresh)
+#if(TARGET FWCoreModulesPlugins)
+#    add_dependencies(RefreshPluginCache FWCoreModulesPlugins)
+#endif()
+#if(TARGET FWCoreIntegrationPlugins)
+#    add_dependencies(RefreshPluginCache FWCoreIntegrationPlugins)
+#endif()
+#if(TARGET FWCoreMessageServicePlugins)
+#    add_dependencies(RefreshPluginCache FWCoreMessageServicePlugins)
+#endif()
+#if(TARGET FWCoreServicesPlugins)
+#    add_dependencies(RefreshPluginCache FWCoreServicesPlugins)
+#endif()
+#if(TARGET FWCoreTestModulesPlugins)
+#    add_dependencies(RefreshPluginCache FWCoreTestModulesPlugins)
+#endif()
 
 # ============================================================================
 # Installation and package configuration
@@ -288,6 +299,12 @@ set(CMSSW_EXPORT_TARGETS
     FWCoreTestProcessor
     FWCoreServices
     FWCoreIntegration
+    # FWCore plugins
+    FWCoreModulesPlugins
+    FWCoreIntegrationPlugins
+    FWCoreMessageServicePlugins
+    FWCoreServicesPlugins
+    FWCoreTestModulesPlugins
     # DataFormats libraries
     DataFormatsCommon
     DataFormatsProvenance
@@ -353,6 +370,10 @@ install(DIRECTORY Utilities/
     DESTINATION ${INCLUDE_INSTALL_DIR}/Utilities
     FILES_MATCHING PATTERN "interface/*.h"
 )
+
+# install python
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python
+        DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 # Export targets file
 install(EXPORT CMSSSWTargets

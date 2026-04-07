@@ -23,13 +23,16 @@ target_link_libraries(FWCoreTestModulesPlugins
 set_target_properties(FWCoreTestModulesPlugins PROPERTIES PREFIX "edmplugin")
 
 file(RELATIVE_PATH PKG_PYTHON_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+# Run edmWriteConfigs to generate Python configuration for this plugin library
+add_custom_command(TARGET FWCoreTestModulesPlugins POST_BUILD
+COMMAND ${CMAKE_BINARY_DIR}/bin/edmWriteConfigs -p $<TARGET_FILE:FWCoreTestModulesPlugins>
+WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
+COMMENT "Generating Python configs for FWCoreTestModulesPlugins"
+)
+
 # Also copy the modules.py template from FWCore/ParameterSet/templates
 file(COPY ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
         DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python/
-        DESTINATION python/${PKG_PYTHON_PATH}
-        PATTERN "__pycache__" EXCLUDE
-        PATTERN "*.pyc" EXCLUDE)
 # Install the modules.py template as well
 install(FILES ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
         DESTINATION python/${PKG_PYTHON_PATH})

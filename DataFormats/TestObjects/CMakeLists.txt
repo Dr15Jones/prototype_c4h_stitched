@@ -8,7 +8,6 @@ root_generate_dictionary(DataFormatsTestObjects_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
     MODULE DataFormatsTestObjects
-    NOINSTALL
     OPTIONS --reflex
 )
 

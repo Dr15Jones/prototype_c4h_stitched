@@ -9,7 +9,6 @@ root_generate_dictionary(DataFormatsWrappedStdDictionaries_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
     MODULE DataFormatsWrappedStdDictionaries
-    NOINSTALL
     OPTIONS --reflex
 )
 
