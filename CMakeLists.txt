@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16...4.0)
+
+project(CMSSW VERSION 1.0.0 LANGUAGES CXX)
 
 # Set compiler from CVMFS (must be before project())
 set(CMAKE_CXX_COMPILER "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/gcc/13.4.0-6908cfdf803923e783448096ca4f0923/bin/g++")
 set(CMAKE_C_COMPILER "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/gcc/13.4.0-6908cfdf803923e783448096ca4f0923/bin/gcc")
-
-project(CMSSW VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++ standard (C++20 required for concepts)
 set(CMAKE_CXX_STANDARD 20)
@@ -39,27 +39,7 @@ message(STATUS "Found Boost: ${Boost_VERSION} at ${Boost_DIR}")
 find_package(Threads REQUIRED)
 
 # Find TBB
-find_path(TBB_INCLUDE_DIR tbb/tbb.h
-    PATHS ${TBB_ROOT}/include
-    NO_DEFAULT_PATH
-    REQUIRED)
-
-find_library(TBB_LIBRARY
-    NAMES tbb libtbb
-    PATHS ${TBB_ROOT}/lib ${TBB_ROOT}/lib64
-    NO_DEFAULT_PATH
-    REQUIRED)
-
-if(TBB_INCLUDE_DIR AND TBB_LIBRARY)
-    add_library(TBB::tbb UNKNOWN IMPORTED)
-    set_target_properties(TBB::tbb PROPERTIES
-        IMPORTED_LOCATION "${TBB_LIBRARY}"
-        INTERFACE_INCLUDE_DIRECTORIES "${TBB_INCLUDE_DIR}"
-    )
-    message(STATUS "Found TBB: ${TBB_LIBRARY}")
-else()
-    message(FATAL_ERROR "TBB not found at ${TBB_ROOT}")
-endif()
+find_package(TBB REQUIRED)
 
 # Find ROOT
 find_package(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree
