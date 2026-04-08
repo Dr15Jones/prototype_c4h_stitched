@@ -22,7 +22,7 @@ target_link_libraries(FWCoreServices
         Boost::boost
         tinyxml2::tinyxml2
         CLHEP::CLHEP
-        cpu_features::cpu_features
+        CpuFeatures::cpu_features
         ROOT::Tree
         ROOT::Hist
         atomic
