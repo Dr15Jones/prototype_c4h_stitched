@@ -24,23 +24,22 @@ set(BOOST_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/boost/1.80.0-4e041c5
 set(MD5_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/md5/1.0.0-26057075013e190e56dad37d35219376")
 set(TINYXML2_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/tinyxml2/6.2.0-67924ead96ecb4e69aad321b767979a5")
 set(CLHEP_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/clhep/2.4.7.2-9d5b7c3a55c3af00652fa823dcdd8319")
-#set(PYTHON3_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/python3/3.9.14-e16d2924e9eb9db8fddd14e187cf7209")
 set(Python3_ROOT_DIR "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/python3/3.9.14-e16d2924e9eb9db8fddd14e187cf7209")
 set(PYBIND11_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/py3-pybind11/3.0.1-225a0aebad9d3cd25d37aabcec07d773")
 set(CPU_FEATURES_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/cpu_features/0.9.0-9345f64300a0e12ee5bd1420a0e15254")
 
 # Set CMAKE_PREFIX_PATH to help find packages
-list(APPEND CMAKE_PREFIX_PATH ${TBB_ROOT} ${ROOT_DIR} ${BOOST_ROOT} ${CPU_FEATURES_ROOT} ${CLHEP_ROOT})
+list(APPEND CMAKE_PREFIX_PATH ${TBB_ROOT} ${ROOT_DIR} ${BOOST_ROOT} ${CPU_FEATURES_ROOT} ${CLHEP_ROOT} ${TINYXML2_ROOT} ${PYBIND11_ROOT})
 
 find_package(Boost REQUIRED COMPONENTS program_options filesystem serialization)
 message(STATUS "Found Boost: ${Boost_VERSION} at ${Boost_DIR}")
 find_package(Threads REQUIRED)
 find_package(TBB REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development)
-find_package(TINYXML2 REQUIRED)
+find_package(tinyxml2 REQUIRED)
 find_package(MD5 REQUIRED)
 find_package(CLHEP REQUIRED)
-find_package(PYBIND11 REQUIRED)
+find_package(pybind11 REQUIRED)
 find_package(CpuFeatures REQUIRED)
 #the include derived from CpuFeatures appears to point to the wrong directory
 get_target_property(CPU_INCLUDES CpuFeatures::cpu_features INTERFACE_INCLUDE_DIRECTORIES)

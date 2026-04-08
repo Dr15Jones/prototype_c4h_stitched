@@ -16,7 +16,7 @@ target_link_libraries(FWCoreMessageLogger
         FWCoreUtilities
         Boost::boost
         Threads::Threads
-        tinyxml2::tinyxml2
+        tinyxml2
 )
 
 set_target_properties(FWCoreMessageLogger PROPERTIES
