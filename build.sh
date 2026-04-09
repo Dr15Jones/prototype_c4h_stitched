@@ -15,7 +15,8 @@ echo "================================"
 
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BUILD_DIR="${SCRIPT_DIR}/build"
+BUILD_DIR="${SCRIPT_DIR}/../build"
+INSTALL_DIR="${SCRIPT_DIR}/../install"
 
 # Source environment setup
 echo -e "${YELLOW}Setting up environment...${NC}"
@@ -72,13 +73,14 @@ fi
 # Configure
 cd "${BUILD_DIR}"
 echo -e "${YELLOW}Configuring CMake (Build Type: ${BUILD_TYPE})...${NC}"
-cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+cmake .. -DCMAKE_CXX_COMPILER=/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/gcc/13.4.0-6908cfdf803923e783448096ca4f0923/bin/g++ -DCMAKE_PREFIX_PATH=/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/tbb/v2022.3.0-88eb7be4ee320d604a798a914aea6359:/cvmfs/cms.cern.ch/el8_amd64_gcc13/lcg/root/6.36.09-550a5cc65f2c3764971305621e222830:/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/boost/1.80.0-4e041c5f850405476cd4bc42f965d947:/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/clhep/2.4.7.2-9d5b7c3a55c3af00652fa823dcdd8319:/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/python3/3.9.14-e16d2924e9eb9db8fddd14e187cf7209:/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/cpu_features/0.9.0-9345f64300a0e12ee5bd1420a0e15254 -DMD5_ROOT=/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/md5/1.0.0-26057075013e190e56dad37d35219376 -Dtinyxml2_DIR=/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/tinyxml2/6.2.0-67924ead96ecb4e69aad321b767979a5/lib64/cmake/tinyxml2 -Dpybind11_DIR=/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/py3-pybind11/3.0.1-225a0aebad9d3cd25d37aabcec07d773/share/cmake/pybind11 -DCpuFeatures_DIR=/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/cpu_features/0.9.0-9345f64300a0e12ee5bd1420a0e15254/lib64/cmake/CpuFeatures -DCMAKE_BUILD_TYPE=${BUILD_TYPE}  -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 
 # Build
 echo -e "${YELLOW}Building with ${JOBS} parallel jobs...${NC}"
 cmake --build . -j${JOBS}
-
+cmake --install .
 echo -e "${GREEN}Build completed successfully!${NC}"
 echo ""
 echo "Libraries are in: ${BUILD_DIR}/lib/"
 echo "Executables are in: ${BUILD_DIR}/bin/"
+echo "Installed files are in: ${INSTALL_DIR}/"
