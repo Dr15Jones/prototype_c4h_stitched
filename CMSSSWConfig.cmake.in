@@ -9,6 +9,9 @@ get_filename_component(CMSSW_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 # Include the targets file
 include("${CMSSW_CMAKE_DIR}/CMSSSWTargets.cmake")
 
+# Include CMSSW macros and utility functions
+include("${CMSSW_CMAKE_DIR}/CMSSSWMacros.cmake")
+
 # Set variables for compatibility
 set(CMSSW_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
 set(CMSSW_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")

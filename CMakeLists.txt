@@ -17,6 +17,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
 
+# Include CMSSW utility macros
+include(CMSSSWMacros)
+
 # CVMFS paths for external dependencies
 set(TBB_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/tbb/v2022.3.0-88eb7be4ee320d604a798a914aea6359")
 set(ROOT_DIR "/cvmfs/cms.cern.ch/el8_amd64_gcc13/lcg/root/6.36.09-550a5cc65f2c3764971305621e222830")
@@ -235,6 +238,7 @@ write_basic_package_version_file(
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/CMSSSWConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/CMSSSWConfigVersion.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/CMSSSWMacros.cmake
     DESTINATION ${CONFIG_INSTALL_DIR}
 )
 
