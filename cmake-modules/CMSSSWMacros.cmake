@@ -130,3 +130,107 @@ function(cmssw_generate_plugin)
     endif()
 
 endfunction()
+
+#[=======================================================================[.rst:
+cmssw_generate_plugincache
+--------------------------
+
+Generate the .edmplugincache file for CMSSW EDM plugin libraries.
+
+.. command:: cmssw_generate_plugincache
+
+  ::
+
+    cmssw_generate_plugincache(
+        PLUGIN_TARGETS <target1> [<target2> ...]
+        [OUTPUT_DIR <directory>]
+        [CACHE_TARGET_NAME <name>]
+    )
+
+  Creates a custom command that runs edmPluginRefresh on all specified plugin
+  targets to generate the .edmplugincache file, and installs the cache file.
+
+  Arguments:
+    ``PLUGIN_TARGETS``
+      List of plugin target names to include in the cache.
+
+    ``OUTPUT_DIR`` (optional)
+      Directory where the .edmplugincache file will be generated.
+      Defaults to ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}.
+
+    ``CACHE_TARGET_NAME`` (optional)
+      Name for the custom target that triggers cache generation.
+      Defaults to "RefreshPluginCache".
+
+  The function will:
+    - Create a custom command that runs edmPluginRefresh on all plugins
+    - Create a custom target (built by default) that depends on the cache
+    - Install the .edmplugincache file to the library directory
+    - Automatically handle plugin targets that may not exist
+
+  Example:
+    ::
+
+      cmssw_generate_plugincache(
+          PLUGIN_TARGETS
+              FWCoreModulesPlugins
+              FWCoreIntegrationPlugins
+              FWCoreServicesPlugins
+              MyCustomPlugins
+      )
+
+#]=======================================================================]
+function(cmssw_generate_plugincache)
+    # Parse arguments
+    set(options "")
+    set(oneValueArgs OUTPUT_DIR CACHE_TARGET_NAME)
+    set(multiValueArgs PLUGIN_TARGETS)
+    cmake_parse_arguments(CACHE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    # Validate required arguments
+    if(NOT CACHE_PLUGIN_TARGETS)
+        message(FATAL_ERROR "cmssw_generate_plugincache: PLUGIN_TARGETS argument is required")
+    endif()
+
+    # Set defaults
+    if(NOT CACHE_OUTPUT_DIR)
+        set(CACHE_OUTPUT_DIR ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+    endif()
+
+    if(NOT CACHE_CACHE_TARGET_NAME)
+        set(CACHE_CACHE_TARGET_NAME "RefreshPluginCache")
+    endif()
+
+    # Build the command arguments and dependencies lists
+    set(PLUGIN_COMMAND_ARGS "")
+    set(PLUGIN_DEPENDS "edmPluginRefresh")
+
+    foreach(plugin_target ${CACHE_PLUGIN_TARGETS})
+        # Add target file to command arguments (only if target exists)
+        list(APPEND PLUGIN_COMMAND_ARGS
+            "$<$<TARGET_EXISTS:${plugin_target}>:$<TARGET_FILE:${plugin_target}>>")
+        
+        # Add target to dependencies (only if target exists)
+        list(APPEND PLUGIN_DEPENDS
+            "$<$<TARGET_EXISTS:${plugin_target}>:${plugin_target}>")
+    endforeach()
+
+    # Create custom command to generate the plugin cache
+    add_custom_command(
+        OUTPUT "${CACHE_OUTPUT_DIR}/.edmplugincache"
+        COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh ${PLUGIN_COMMAND_ARGS}
+        DEPENDS ${PLUGIN_DEPENDS}
+        COMMENT "Refreshing plugin cache for edmplugin libraries"
+        VERBATIM
+    )
+
+    # Add a custom target that depends on the plugin cache and is built by default
+    add_custom_target(${CACHE_CACHE_TARGET_NAME} ALL
+        DEPENDS "${CACHE_OUTPUT_DIR}/.edmplugincache"
+    )
+
+    # Install the plugin cache file
+    install(FILES "${CACHE_OUTPUT_DIR}/.edmplugincache"
+            TYPE LIB)  # Automatically uses CMAKE_INSTALL_LIBDIR
+
+endfunction()

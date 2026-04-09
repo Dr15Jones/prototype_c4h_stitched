@@ -67,33 +67,15 @@ add_subdirectory(FWCore)
 add_subdirectory(SimDataFormats)
 add_subdirectory(Utilities)
 
-# Custom command to run edmPluginRefresh on all plugin libraries after build
-add_custom_command(
-    OUTPUT "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/.edmplugincache"
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh
-        $<$<TARGET_EXISTS:FWCoreModulesPlugins>:$<TARGET_FILE:FWCoreModulesPlugins>>
-        $<$<TARGET_EXISTS:FWCoreIntegrationPlugins>:$<TARGET_FILE:FWCoreIntegrationPlugins>>
-        $<$<TARGET_EXISTS:FWCoreMessageServicePlugins>:$<TARGET_FILE:FWCoreMessageServicePlugins>>
-        $<$<TARGET_EXISTS:FWCoreServicesPlugins>:$<TARGET_FILE:FWCoreServicesPlugins>>
-        $<$<TARGET_EXISTS:FWCoreTestModulesPlugins>:$<TARGET_FILE:FWCoreTestModulesPlugins>>
-    DEPENDS
-        edmPluginRefresh
-        $<$<TARGET_EXISTS:FWCoreModulesPlugins>:FWCoreModulesPlugins>
-        $<$<TARGET_EXISTS:FWCoreIntegrationPlugins>:FWCoreIntegrationPlugins>
-        $<$<TARGET_EXISTS:FWCoreMessageServicePlugins>:FWCoreMessageServicePlugins>
-        $<$<TARGET_EXISTS:FWCoreServicesPlugins>:FWCoreServicesPlugins>
-        $<$<TARGET_EXISTS:FWCoreTestModulesPlugins>:FWCoreTestModulesPlugins>
-    COMMENT "Refreshing plugin cache for edmplugin libraries"
-    VERBATIM
+# Generate plugin cache for all plugin libraries
+cmssw_generate_plugincache(
+    PLUGIN_TARGETS
+        FWCoreModulesPlugins
+        FWCoreIntegrationPlugins
+        FWCoreMessageServicePlugins
+        FWCoreServicesPlugins
+        FWCoreTestModulesPlugins
 )
-
-# Add a custom target that depends on the plugin cache and is built by default
-add_custom_target(RefreshPluginCache ALL
-    DEPENDS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/.edmplugincache"
-)
-
-install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/.edmplugincache"
-        TYPE LIB) # Automatically uses CMAKE_INSTALL_LIBDIR
 
 # ============================================================================
 # Installation and package configuration
